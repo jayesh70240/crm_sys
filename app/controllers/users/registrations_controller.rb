@@ -3,8 +3,12 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   include RackSessionFix
   respond_to :json
-  private
 
+  def sign_up_params
+    params.require(:user).permit(:email, :password, :role)
+  end
+
+  private
   def respond_with(resource, _opts = {})
     if request.method == "POST" && resource.persisted?
       render json: {

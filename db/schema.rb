@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_01_083818) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_02_073058) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_01_083818) do
     t.text "remarks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "task_id"
     t.index ["customer_id"], name: "index_call_logs_on_customer_id"
     t.index ["user_id"], name: "index_call_logs_on_user_id"
   end
@@ -34,6 +35,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_01_083818) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "task_customers", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_task_customers_on_customer_id"
+    t.index ["task_id"], name: "index_task_customers_on_task_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -65,5 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_01_083818) do
 
   add_foreign_key "call_logs", "customers"
   add_foreign_key "call_logs", "users"
+  add_foreign_key "task_customers", "customers"
+  add_foreign_key "task_customers", "tasks"
   add_foreign_key "tasks", "users"
 end

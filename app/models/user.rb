@@ -11,12 +11,14 @@ class User < ApplicationRecord
 
   enum role: [:admin,:employee]  #0 1 
 
-  has_many :call_logs
-  has_many :tasks
+  has_many :tasks, dependent: :destroy
+  has_many :call_logs, dependent: :destroy
+
+  validates :email, presence: true, uniqueness: true
 
   #add role default user when newly created!
   before_save do
-    self.role = :user unless ['employee','admin'].include?(self.role)
+    self.role = :employee unless ['admin'].include?(self.role)
   end
 
 
